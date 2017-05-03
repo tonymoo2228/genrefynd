@@ -67,7 +67,7 @@ print("Number of genres: " + str(len(all_genres)))
 print("Number of movies: " + str(len(all_movies)))
 
 # Creates the output file.
-output = open("data.txt", 'w')
+output = open(argv[3], 'w')
 
 # For each movie, write the relevant data to the output file.
 for movie in all_movies:

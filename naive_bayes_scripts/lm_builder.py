@@ -104,11 +104,12 @@ def probLaplaceUni(prev, word, bi, uni):
 
 class SmoothedModel(dict):
     def __missing__(self, key):
-        return -40000
-        # if self.uni[key[1]] != 0:
-        #     return log2(1/(self.uni[key[1]] + len(self.uni)))
-        # else:
-        #     return log2(1/uniques_count)
+        # return -40000
+        # return log2(1/(self.uni[key[1]] + len(self.uni)))
+        if self.uni[key[1]] != 0:
+            return log2(1/(self.uni[key[1]] + len(self.uni)))
+        else:
+            return log2(1/uniques_count)
 
 
 def getAllProbs(uni, bi):
@@ -128,6 +129,33 @@ def getAllProbs(uni, bi):
             model[word_pair] = probLaplaceUni(word_pair.prev_word,
                                               word_pair.word, big, unig)
     return models
+
+
+class SmoothedUniModel(dict):
+    def __missing__(self, key):
+        return -40000
+
+
+def getAllUniProbs(uni, totals):
+    models = dict()
+    for genre, counts in uni.items():
+
+        model = SmoothedUniModel()
+        model.unknown = log2(1/totals[genre])
+        models[genre] = model
+
+        for word, count in counts.items():
+            models[genre][word] = log2(count/totals[genre])
+
+    return models
+
+
+def writeUniModel(model, name, f):
+    outstr = ''
+    for word in model:
+        outstr += word + ' ' + str(model[word]) + '\n'
+    f.write('\n' + name + '\t' + str(model.unknown) + '\n')
+    f.write(outstr)
 
 
 def writeModel(model, name, f):
@@ -151,11 +179,15 @@ def main(args):
     s = getStats(data)
     print('Done counting, now calculating probabilities.')
     models = getAllProbs(s[0], s[1])
+    unimodels = getAllUniProbs(s[0], s[2])
     print('Done Calculating probabilities')
     with open('models.mod', 'w') as f:
         for model in models:
             writeModel(models[model], model, f)
     print('Completed training.')
+    with open('unimodels.mod', 'w') as f2:
+        for model in unimodels:
+            writeUniModel(unimodels[model], model, f2)
     return models
 
 
