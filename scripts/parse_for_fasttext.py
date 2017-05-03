@@ -9,12 +9,11 @@ def main(args):
             outstr = ''
             title, text, genres = line.split('\t')
             for sent in (sent_tokenize(text)):
-                for word in word_tokenize(sent):
+                for word in word_tokenize(sent)[:-1]:
                     outstr += word + ' '
-                outstr += '\n'
+                outstr = outstr[:-1] + '\n'
             # for genre in eval(genres):
             #     outstr += ' __label__' + genre
-            outstr.strip()
             outf.write(outstr)
 
 
