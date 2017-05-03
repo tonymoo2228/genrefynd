@@ -60,20 +60,23 @@ for line in data_string.split("\n"):
 
 print("Done parsing input data.")
 
+print("Average Number of Genres per Movie: " + str(float(total_genre_count / len(movie_titles))))
+
 # Keeps track of the total number of guesses and the correct number of guesses.
 correct_guesses = 0
 total_guesses = 0
 
-# Iterate through each movie, generating a random genre.
-for movie in movie_titles:
-    # Super complicated algorithm to generate random genres.
-    i = randint(0, total_genre_count)
-    for genre in genre_counts.keys():
-        if i < 0: break
-        guess = genre
-        i -= genre_counts[genre]
-    if guess in movies_to_genres[movie]: correct_guesses += 1
-    total_guesses += 1
+for j in range(0, 100):
+    # Iterate through each movie, generating a random genre.
+    for movie in movie_titles:
+        # Super complicated algorithm to generate random genres.
+        i = randint(0, total_genre_count)
+        for genre in genre_counts.keys():
+            if i < 0: break
+            guess = genre
+            i -= genre_counts[genre]
+        if guess in movies_to_genres[movie]: correct_guesses += 1
+        total_guesses += 1
 
 print("Done generating weighted random genres.")
 print("Total Number of Unique Genres: " + str(len(genre_counts)))
@@ -84,13 +87,14 @@ print("Correct Guess Fraction: " + str(float(correct_guesses/total_guesses)))
 correct_guesses = 0
 total_guesses = 0
 
-# Iterate through each movie, generating a random genre.
-for movie in movie_titles:
-    # Super complicated algorithm to generate random genres.
-    i = randint(0, len(genre_counts.keys())-1)
-    guess = list(genre_counts.keys())[i]
-    if guess in movies_to_genres[movie]: correct_guesses += 1
-    total_guesses += 1
+for j in range(0, 100):
+    # Iterate through each movie, generating a random genre.
+    for movie in movie_titles:
+        # Super complicated algorithm to generate random genres.
+        i = randint(0, len(genre_counts.keys())-1)
+        guess = list(genre_counts.keys())[i]
+        if guess in movies_to_genres[movie]: correct_guesses += 1
+        total_guesses += 1
 
 print("Done generating truly random genres.")
 print("Total Number of Unique Genres: " + str(len(genre_counts)))
